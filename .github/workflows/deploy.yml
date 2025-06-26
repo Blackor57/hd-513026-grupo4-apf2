@@ -1,22 +1,24 @@
-name: Deploy static site to GitHub Pages
+name: CI/CD static site to GitHub Pages
 
 on:
   push:
     branches:
       - main
 
-
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3 
+      - name: Verificar que existe index.html (CI)
+        run: test -f index.html
+
+      - name: Deploy to GitHub Pages (CD)
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          personal_token: ${{ secrets.GH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: .
           publish_branch: gh-pages
